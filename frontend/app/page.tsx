@@ -30,7 +30,7 @@ export default async function Home() {
   console.log("Session: ", session)
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-[calc(100vh-90px)] bg-gradient-to-b from-slate-50 to-slate-100 text-slate-800 p-8">
+    <main className="flex flex-col items-center justify-center min-h-[calc(100vh-90px)] bg-[url(/back.jpg)] bg-cover text-slate-800 p-8">
       {session?.user ? (
         
         <section
@@ -85,7 +85,7 @@ export default async function Home() {
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
             SSR-EDITOR
           </h1>
-          <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+          <p className="text-lg text-slate-600 mb-8 leading-relaxed text-blue-500">
             Skapa, redigera och hantera dina dokument direkt i webbläsaren.  
             Snabbt, säkert och utan onödigt krångel.
           </p>
