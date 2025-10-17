@@ -2,7 +2,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const res = await fetch("http://localhost:5025/auth/signout", {
+
+
+  const envMode = process.env.ENV_MODE;
+  console.log("envMODE",envMode)
+  const isProd = envMode === "prod";
+
+  const backend_url = isProd
+    ? `${process.env.BACKEND_URL_LIVE}`
+    : "http://localhost:5025";
+  
+  
+  const res = await fetch(`${backend_url}/auth/signout`, {
     method: "POST",
     headers: {
       cookie: req.headers.get("cookie") || "",

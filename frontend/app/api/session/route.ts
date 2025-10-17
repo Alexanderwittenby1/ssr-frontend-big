@@ -4,9 +4,15 @@ export async function GET(req: NextRequest) {
   // Hämta bara cookie-headern
   const cookie = req.headers.get("cookie") || "";
   console.log("The cookie:", cookie)
+  const envMode = process.env.ENV_MODE;
+  console.log("envMODE",envMode)
+  const isProd = envMode === "prod";
 
+  const backend_url = isProd
+    ? `${process.env.BACKEND_URL_LIVE}`
+    : "http://localhost:5025";
   
-  const resp = await fetch("http://localhost:5025/auth/session", {
+  const resp = await fetch(`${backend_url}/auth/session`, {
     headers: { cookie },
     credentials: "include", 
   });

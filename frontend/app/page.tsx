@@ -11,12 +11,14 @@ export default async function Home() {
   console.log("envMODE",envMode)
   const isProd = envMode === "prod";
 
-  const graphqlUrl = isProd
-    ? `${process.env.BACKEND_URL_LIVE}`
-    : "http://localhost:5025";
+  const backendUrl = isProd
+  ? "https://bth-backend-awgwf4b9dneyhnfe.northeurope-01.azurewebsites.net"
+  : "http://localhost:5025";
+
+  const loginUrl = `${backendUrl}/auth/signin`;
 
 
-  const res = await fetch(`${graphqlUrl}/auth/session`, {
+  const res = await fetch(`${backendUrl}/auth/session`, {
     headers: {
       Cookie: `authjs.session-token=${token}`,
     },
@@ -91,7 +93,7 @@ export default async function Home() {
           </p>
 
           <div className="flex gap-4">
-            <a href="https://bth-backend-awgwf4b9dneyhnfe.northeurope-01.azurewebsites.net/auth/signin">
+            <a href={loginUrl}>
               <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl shadow-md hover:scale-105 transition hover:cursor-pointer">
                 Logga in här
               </Button>
