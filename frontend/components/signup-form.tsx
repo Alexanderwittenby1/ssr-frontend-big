@@ -34,7 +34,7 @@ export function SignupForm({
         const hashedPassword = await hashPassword(password);
         console.log(formData)
 
-        const res = await fetch("https://bth-backend-awgwf4b9dneyhnfe.northeurope-01.azurewebsites.net/register/new", {
+        const res = await fetch("https://min-webb-app-ardhcjbkhgfkdzd2.northeurope-01.azurewebsites.net/register/new", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, email, password }),

@@ -17,7 +17,11 @@ export async function GET(req: NextRequest) {
     credentials: "include", 
   });
 
+  console.log("FCKN RESP", resp)
+
   const data = await resp.json();
+
+  console.log("EN TILL", data)
   return NextResponse.json(data, { status: resp.status });
 }
 

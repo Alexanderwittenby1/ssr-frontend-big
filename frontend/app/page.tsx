@@ -12,10 +12,11 @@ export default async function Home() {
   const isProd = envMode === "prod";
 
   const backendUrl = isProd
-  ? "https://bth-backend-awgwf4b9dneyhnfe.northeurope-01.azurewebsites.net"
+  ? process.env.BACKEND_URL_LIVE
   : "http://localhost:5025";
 
   const loginUrl = `${backendUrl}/auth/signin`;
+  console.log(loginUrl)
 
 
   const res = await fetch(`${backendUrl}/auth/session`, {

@@ -140,7 +140,7 @@ const Tiptap = ({
   });
 
   useEffect(() => {
-    const socket = io('http://localhost:5025');
+    const socket = io("https://min-webb-app-ardhcjbkhgfkdzd2.northeurope-01.azurewebsites.net");
     socketRef.current = socket;
 
     socket.emit('join', { documentId });

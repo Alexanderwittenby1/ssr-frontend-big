@@ -1,5 +1,5 @@
 export async function graphqlRequest(query: string, variables?: any) {
-  const res = await fetch('https://bth-backend-awgwf4b9dneyhnfe.northeurope-01.azurewebsites.net/', {
+  const res = await fetch('https://min-webb-app-ardhcjbkhgfkdzd2.northeurope-01.azurewebsites.net/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',

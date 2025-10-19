@@ -48,7 +48,7 @@ export function LoginForm({
 
                 
                 <a
-                  href={`https://bth-backend-awgwf4b9dneyhnfe.northeurope-01.azurewebsites.net/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+                  href={`https://min-webb-app-ardhcjbkhgfkdzd2.northeurope-01.azurewebsites.net/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`}
                 >
                   <Button variant="outline" type="button">
                     Login with Github

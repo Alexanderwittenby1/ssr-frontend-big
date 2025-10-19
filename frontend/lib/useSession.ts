@@ -5,7 +5,7 @@ export function useSession() {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    fetch("https://bth-backend-awgwf4b9dneyhnfe.northeurope-01.azurewebsites.net/auth/session", {
+    fetch("https://min-webb-app-ardhcjbkhgfkdzd2.northeurope-01.azurewebsites.net//auth/session", {
       credentials: "include",
     })
       .then(res => res.json())

@@ -1,5 +1,5 @@
 export async function getSession() {
-  const res = await fetch("https://bth-backend-awgwf4b9dneyhnfe.northeurope-01.azurewebsites.net/auth/session", { credentials: "include" });
+  const res = await fetch("https://min-webb-app-ardhcjbkhgfkdzd2.northeurope-01.azurewebsites.net", { credentials: "include" });
 
   if (!res.ok) return null;
 
