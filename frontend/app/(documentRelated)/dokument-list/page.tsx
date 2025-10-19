@@ -9,15 +9,15 @@ interface Document {
 
 export default async function Home() {
   const cookieHeader = cookies().toString();
-  const envMode = process.env.ENV_MODE;
+  const envMode = process.env.NODE_ENV;
   console.log("envMODE",envMode)
-  const isProd = envMode === "prod";
+  const isProd = envMode === "production";
 
   const graphqlUrl = isProd
     ? `${process.env.BACKEND_URL_LIVE}/graphql`
     : "http://localhost:5025/graphql";
 
-  console.log(graphqlUrl)
+  
 
   const query = `
     query {

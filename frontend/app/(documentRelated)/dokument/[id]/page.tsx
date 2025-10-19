@@ -4,16 +4,16 @@ import { cookies } from "next/headers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SidebarItems from "@/components/sidebar-list";
 import { GET_ALL_DOCUMENTS } from "@/Graphql/queries";
-import { graphqlRequest } from "@/Graphql/helpers";
+
 
 export default async function Dokument({ params }: { params: { id: string } }) {
   const { id } = await params;
   const cookieHeader = cookies().toString();
-  const envMode = process.env.ENV_MODE;
-  const isProd = envMode === "prod";
+  const envMode = process.env.NODE_ENV;
+  const isProd = envMode === "production";
 
   const graphqlUrl = isProd
-    ? `${process.env.BACKEND_URL_LIVE}/graphql`
+    ? `${process.env.NEXT_PUBLIC_BACKEND_URL_PROD}/graphql`
     : "http://localhost:5025/graphql";
 
   

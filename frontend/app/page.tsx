@@ -5,15 +5,17 @@ import Link from "next/link";
 export default async function Home() {
   const cookieStore = await cookies();
   const token = await cookieStore.get("authjs.session-token")?.value;
-  console.log("fckn token: ", token)
   
-  const envMode = process.env.ENV_MODE;
-  console.log("envMODE",envMode)
-  const isProd = envMode === "prod";
+  
+  const envMode = process.env.NODE_ENV;
+  
+  
+  console.log("ENV är: ", envMode)
+  const isProd = envMode === "production";
 
   const backendUrl = isProd
-  ? process.env.BACKEND_URL_LIVE
-  : "http://localhost:5025";
+  ? process.env.NEXT_PUBLIC_BACKEND_URL_PROD
+  : process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL;
 
   const loginUrl = `${backendUrl}/auth/signin`;
   console.log(loginUrl)

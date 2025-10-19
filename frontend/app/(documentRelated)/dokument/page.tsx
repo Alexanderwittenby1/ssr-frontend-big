@@ -22,8 +22,8 @@ export default async function DokumentPage() {
     }
   `;
 
-  const envMode = process.env.ENV_MODE;
-  const isProd = envMode === "prod";
+  const envMode = process.env.NODE_ENV;
+  const isProd = envMode === "production";
 
   const graphqlUrl = isProd
     ? `${process.env.BACKEND_URL_LIVE}/graphql`
