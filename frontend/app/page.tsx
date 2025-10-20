@@ -98,7 +98,7 @@ export default async function Home() {
           <div className="flex gap-4">
             <a href={loginUrl}>
               <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl shadow-md hover:scale-105 transition hover:cursor-pointer">
-                Logga in här
+                Logga in
               </Button>
             </a>
             <Link href="/signup">
