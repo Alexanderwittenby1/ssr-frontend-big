@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   
   const cookie = req.headers.get("cookie") || "";
+  console.log("Cookie" ,cookie)
   
   const envMode = process.env.NODE_ENV;
   
@@ -19,10 +20,11 @@ export async function GET(req: NextRequest) {
     credentials: "include", 
   });
 
-  
+  console.log("Jag blev körd:")
 
   const data = await resp.json();
 
+  console.log("Efter jag blev körd: ",  data)
   
   return NextResponse.json(data, { status: resp.status });
 }
