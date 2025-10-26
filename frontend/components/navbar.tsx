@@ -16,6 +16,8 @@ export default function Navbar() {
 
   // Välj rätt backend beroende på miljö
   const isDev = process.env.NODE_ENV === "development";
+  console.log("Navbar idDev:",isDev)
+  console.log("User",user)
 
   const BACKEND_URL = isDev
     ? process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL
@@ -35,6 +37,8 @@ export default function Navbar() {
         setLoading(false);
       });
   }, []);
+
+
 
   if (loading)
     return (
@@ -71,7 +75,12 @@ export default function Navbar() {
               Logga ut
             </a>
           </>
-        ) : null}
+        ) : <a
+              href={`${BACKEND_URL}/auth/signin`}
+              className="bg-slate-950 text-white px-4 py-1 rounded-full flex flex-row justify-center items-center hover:bg-slate-800 transition font-bold inset-ring-1"
+            >
+              Logga in
+            </a>}
       </div>
     </div>
   );
