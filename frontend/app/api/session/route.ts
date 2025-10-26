@@ -3,8 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const kaka = await cookies();
-  kaka.set("minKaka", "Ballen");
-
   const crf_cookie = kaka.get("__Host-csrf_access_token");
   
 
@@ -24,7 +22,7 @@ export async function GET(req: NextRequest) {
 
   
   const resp = await fetch(`${backend_url}/auth/session`, {
-    headers: { cookie },
+    headers: { Cookie: `${crf_cookie}` },
     credentials: "include", 
   });
 
