@@ -1,9 +1,18 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  const kaka = await cookies();
+  kaka.set("minKaka", "Ballen");
+
+  const crf_cookie = kaka.get("__Host-csrf_access_token");
   
+
+  console.log("CRF Cookie:", crf_cookie);
+  console.log("Kaka:", kaka);
+
   const cookie = req.headers.get("cookie") || "";
-  console.log("Cookie" ,cookie)
+  
   
   const envMode = process.env.NODE_ENV;
   
@@ -18,8 +27,6 @@ export async function GET(req: NextRequest) {
     headers: { cookie },
     credentials: "include", 
   });
-
-  console.log("Jag blev körd:")
 
   const data = await resp.json();
 

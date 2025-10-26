@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default async function Home() {
   const cookieStore = await cookies();
-  const token = await cookieStore.get("authjs.session-token")?.value;
+  const token = await cookieStore.get("__Host-authjs.session-token")?.value;
   
   
   const envMode = process.env.NODE_ENV;
@@ -90,7 +90,7 @@ export default async function Home() {
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
             SSR-EDITOR
           </h1>
-          <p className="text-lg text-slate-600 mb-8 leading-relaxed text-blue-500">
+          <p className="text-lg text-slate-600 mb-8 leading-relaxed ">
             Skapa, redigera och hantera dina dokument direkt i webbläsaren.  
             Snabbt, säkert och utan onödigt krångel.
           </p>

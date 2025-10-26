@@ -16,8 +16,7 @@ export default function Navbar() {
 
   // Välj rätt backend beroende på miljö
   const isDev = process.env.NODE_ENV === "development";
-  console.log("Navbar idDev:",isDev)
-  console.log("User",user)
+  console.log("Navbar isDev:", isDev);
 
   const BACKEND_URL = isDev
     ? process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL
@@ -27,7 +26,7 @@ export default function Navbar() {
     fetch("/api/session", { credentials: "include" })
       .then(async (res) => {
         const data = await res.json().catch(() => null);
-        console.log("session response:", res.status, data);
+        console.log("Detta får vi", data);
         setUser(data?.user || null);
         setLoading(false);
       })
