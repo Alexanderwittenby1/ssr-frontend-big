@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import Link from "next/link";
-import { cookies } from "next/headers";
 
 interface Document {
   id: string;
@@ -9,11 +8,6 @@ interface Document {
 }
 
 export default async function DokumentList() {
-  // ✅ Läs cookies direkt i början (innan await)
-  const cookieHeader = cookies().toString();
-  console.log("📦 Cookie header i DokumentList:", cookieHeader);
-
-  // ✅ Kontrollera session
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return (
@@ -23,7 +17,6 @@ export default async function DokumentList() {
     );
   }
 
-  // ✅ GraphQL-query
   const query = `
     query {
       documents {
@@ -33,28 +26,21 @@ export default async function DokumentList() {
     }
   `;
 
-  // ✅ Bas-URL behövs för SSR (annars skickas inga cookies)
-  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-
-  // ✅ Skicka cookies till proxyn → proxyn skapar JWT till backend
-  const res = await fetch(`${baseUrl}/api/backend/graphql`, {
+  const res = await fetch("/api/backend/graphql", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Cookie: cookieHeader, // 💡 skickar auth-cookie till /api/backend
     },
     body: JSON.stringify({ query }),
     cache: "no-store",
   });
 
   console.log("📡 DokumentList → GraphQL status:", res.status);
-
   const json = await res.json();
   console.log("📄 DokumentList → GraphQL response:", json);
 
   const documents: Document[] = json?.data?.documents ?? [];
 
-  // ✅ Rendera UI
   return (
     <div className="min-h-[calc(100vh-90px)] w-full flex flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 text-slate-800">
       <h1 className="text-3xl font-semibold mb-8 text-slate-900 tracking-tight">
@@ -62,7 +48,6 @@ export default async function DokumentList() {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-[90%] md:w-[80%] p-8 bg-white rounded-3xl shadow-md border border-slate-200">
-        {/* Skapa nytt dokument-knapp */}
         <Link
           href="/dokument"
           className="group flex flex-col justify-center items-center h-[200px] w-full rounded-2xl border-2 border-dashed border-slate-300 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 shadow-sm hover:shadow-md"
@@ -75,7 +60,7 @@ export default async function DokumentList() {
             <Link
               key={doc.id}
               href={`/dokument/${doc.id}`}
-              className="group flex flex-col justify-center items-center h-[200px] w-full rounded-2xl bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-white p-4 text-center shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-[1.03]"
+              className="group flex flex-col justify-center items-center h-[200px] w-full rounded-2xl bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-white p-4 text-center shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-[1.03] "
             >
               <h3 className="font-semibold text-lg mb-1 group-hover:text-blue-300 transition-colors">
                 {doc.title}

@@ -1,22 +1,18 @@
 import React from "react";
 import DisplayDocument from "@/components/display-document";
-import { cookies } from "next/headers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SidebarItems from "@/components/sidebar-list";
 import { GET_ALL_DOCUMENTS } from "@/Graphql/queries";
 
 export default async function Dokument({ params }: { params: { id: string } }) {
-  const { id } = params;
-  const cookieHeader = await cookies().toString();
-  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
+  const { id } = params;
 
   try {
-    const res = await fetch(`${baseUrl}/api/backend/graphql`, {
+    const res = await fetch("/api/backend/graphql", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookieHeader,
       },
       body: JSON.stringify({
         query: GET_ALL_DOCUMENTS,
@@ -26,7 +22,7 @@ export default async function Dokument({ params }: { params: { id: string } }) {
     });
 
     const json = await res.json();
-    console.log("Document-page data:", json);
+    console.log("📄 Dokument-detail GraphQL response:", json);
 
     if (json.errors) {
       return (
