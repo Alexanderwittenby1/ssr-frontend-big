@@ -22,7 +22,6 @@ export async function handler(req: NextRequest) {
   const path = url.pathname.replace("/api/backend", "");
   const targetUrl = BE + path + url.search;
 
-  // ✅ Läs body EN gång
   const contentType = req.headers.get("content-type");
   const body =
     req.method !== "GET" &&
@@ -33,6 +32,7 @@ export async function handler(req: NextRequest) {
 
   const headers = new Headers();
 
+  // ✅ ALWAYS send Authorization if user is logged in
   if (payload) {
     const secret = new TextEncoder().encode(process.env.AUTH_SECRET!);
 
@@ -50,23 +50,8 @@ export async function handler(req: NextRequest) {
     headers.set("Authorization", `Bearer ${backendJWT}`);
   }
 
-  // ✅ AUTH passthrough (ej GraphQL)
-  if (path.startsWith("/auth/login") || path.startsWith("/auth/oauth-link")) {
-    console.log("🔁 AUTH passthrough →", targetUrl);
-
-    const res = await fetch(targetUrl, {
-      method: req.method,
-      headers,
-      body,
-    });
-
-    const data = await res.text();
-    console.log("⬅️ Backend auth status:", res.status);
-    return new NextResponse(data, { status: res.status });
-  }
-
-  // ✅ GraphQL / dokument → JSON
-  headers.set("content-type", "application/json");
+  // ✅ Always JSON for requests to backend API
+  headers.set("Content-Type", "application/json");
 
   console.log("➡️ Proxying request to:", targetUrl);
 
