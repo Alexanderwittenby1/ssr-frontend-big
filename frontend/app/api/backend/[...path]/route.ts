@@ -2,36 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { SignJWT } from "jose";
 
-export const runtime = "edge";
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-
 const BE =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_BACKEND_URL_PROD!
     : process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL!;
 
 export async function handler(req: NextRequest) {
-  const secret = process.env.AUTH_SECRET!;
-  
-  // ✅ Hämta NextAuth-token från cookies på rätt sätt
-  const payload = await getToken({
-    req,
-    secret,
-    secureCookie: process.env.NODE_ENV === "production"
-  });
+  // 1) Läs NextAuth-JWT (dekoderat payload) från cookies
+  const payload = await getToken({ req }); // null om utloggad
 
-  console.log("🔍 Proxy payload:", payload);
-  console.log("🔍 Incoming cookies:", req.headers.get("cookie"));
+  // 2) Förbered headers till backend
+  const headers = new Headers({ "content-type": "application/json" });
 
-  // ✅ Headers till backend
-  const headers = new Headers({
-    "content-type": "application/json",
-    Cookie: req.headers.get("cookie") || ""
-  });
-
-  // ✅ Om vi har en användare → skapa JWT för backend
+  // 3) Om inloggad → minta en HS256-JWT till backend
   if (payload) {
+    const secret = new TextEncoder().encode(process.env.AUTH_SECRET!);
     const backendJWT = await new SignJWT({
       sub: payload.sub,
       name: payload.name,
@@ -41,20 +26,18 @@ export async function handler(req: NextRequest) {
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("15m")
-      .sign(new TextEncoder().encode(secret));
+      .sign(secret);
 
     headers.set("Authorization", `Bearer ${backendJWT}`);
   }
 
-  // ✅ Proxy vidare
+  // 4) Proxy:a vidare
   const url = new URL(req.url);
   const path = url.pathname.replace("/api/backend", "");
-
   const res = await fetch(BE + path, {
     method: req.method,
     body: req.method !== "GET" ? await req.text() : undefined,
     headers,
-    credentials: "include"
   });
 
   const data = await res.text();

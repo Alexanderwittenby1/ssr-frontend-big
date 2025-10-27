@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import Link from "next/link";
+import { graphqlServer } from "@/lib/graphql-server"; // ✅ IMPORT
 
 interface Document {
   id: string;
@@ -9,6 +10,7 @@ interface Document {
 
 export default async function DokumentList() {
   const session = await getServerSession(authOptions);
+
   if (!session?.user) {
     return (
       <div className="h-screen flex items-center justify-center text-2xl text-red-600">
@@ -26,22 +28,9 @@ export default async function DokumentList() {
     }
   `;
 
-  const origin = process.env.NEXTAUTH_URL || "http://localhost:3000";
-
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/backend/graphql`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query }),
-    cache: "no-store",
-  });
-
-  console.log("📡 DokumentList → GraphQL status:", res.status);
-  const json = await res.json();
-  console.log("📄 DokumentList → GraphQL response:", json);
-
-  const documents: Document[] = json?.data?.documents ?? [];
+  // ✅ Replace fetch with graphqlServer
+  const data = await graphqlServer(query);
+  const documents: Document[] = data?.documents ?? [];
 
   return (
     <div className="min-h-[calc(100vh-90px)] w-full flex flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 text-slate-800">

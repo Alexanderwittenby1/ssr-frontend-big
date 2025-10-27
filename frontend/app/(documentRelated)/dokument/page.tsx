@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth-options";
 import SidebarItems from "@/components/sidebar-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import NewDocument from "@/components/new-document";
+import { graphqlServer } from "@/lib/graphql-server"; // ✅ IMPORT
 
 export default async function DokumentPage() {
   const session = await getServerSession(authOptions);
@@ -30,20 +31,10 @@ export default async function DokumentPage() {
       }
     }
   `;
-  // const origin = process.env.NEXTAUTH_URL || "http://localhost:3000";
-  
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/backend/graphql`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query }),
-    cache: "no-store",
-  });
 
-  console.log("📡 DokumentPage GraphQL status:", res.status);
-  const data = await res.json();
-  console.log("📄 DokumentPage GraphQL svar:", data);
-
-  const posts = data?.data?.documents || [];
+  // ✅ Replace fetch with graphqlServer
+  const data = await graphqlServer(query);
+  const posts = data?.documents || [];
 
   return (
     <div className="flex flex-1 min-h-0">

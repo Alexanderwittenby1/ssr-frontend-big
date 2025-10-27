@@ -3,39 +3,18 @@ import DisplayDocument from "@/components/display-document";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SidebarItems from "@/components/sidebar-list";
 import { GET_ALL_DOCUMENTS } from "@/Graphql/queries";
+import { graphqlServer } from "@/lib/graphql-server"; // ✅ IMPORT
 
 export default async function Dokument({ params }: { params: { id: string } }) {
-
   const { id } = params;
-  const origin = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
   try {
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/backend/graphql`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: GET_ALL_DOCUMENTS,
-        variables: { id },
-      }),
-      cache: "no-store",
-    });
+    // ✅ Replace fetch with graphqlServer
+    const data = await graphqlServer(GET_ALL_DOCUMENTS, { id });
 
-    const json = await res.json();
-    console.log("📄 Dokument-detail GraphQL response:", json);
-
-    if (json.errors) {
-      return (
-        <div className="w-full h-screen flex justify-center items-center font-bold">
-          Serverfel: {json.errors[0]?.message || "Okänt fel"}
-        </div>
-      );
-    }
-
-    const posts = json.data?.documents || [];
-    const post = json.data?.document;
-    const users = json.data?.users;
+    const posts = data?.documents || [];
+    const post = data?.document;
+    const users = data?.users;
 
     if (!post) {
       return (
