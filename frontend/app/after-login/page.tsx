@@ -24,7 +24,7 @@ function AfterLoginInner() {
       const res = await fetch("/api/backend/auth/oauth-link", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${session.jwt}`,
+          Authorization: `Bearer ${session?.jwt}`,
           "Content-Type": "application/json",
         },
       });
