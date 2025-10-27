@@ -5,36 +5,28 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import SidebarItems from "@/components/sidebar-list";
 import { GET_ALL_DOCUMENTS } from "@/Graphql/queries";
 
-
 export default async function Dokument({ params }: { params: { id: string } }) {
-  const { id } = await params;
-  const cookieHeader = cookies().toString();
-  const envMode = process.env.NODE_ENV;
-  const isProd = envMode === "production";
+  const { id } = params;
+  const cookieHeader = await cookies().toString();
+  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
-  const graphqlUrl = isProd
-    ? `${process.env.NEXT_PUBLIC_BACKEND_URL_PROD}/graphql`
-    : "http://localhost:5025/graphql";
-
-  
 
   try {
-    const res = await fetch(graphqlUrl, {
+    const res = await fetch(`${baseUrl}/api/backend/graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Cookie: cookieHeader,
       },
-      body: JSON.stringify({ query: GET_ALL_DOCUMENTS, variables: { id } }),
+      body: JSON.stringify({
+        query: GET_ALL_DOCUMENTS,
+        variables: { id },
+      }),
       cache: "no-store",
     });
 
     const json = await res.json();
-    console.log("WTF:", json)
-
-    if (!res.ok) {
-      return <div>Fel vid hämtning av dokument ({res.status})</div>;
-    }
+    console.log("Document-page data:", json);
 
     if (json.errors) {
       return (
@@ -58,7 +50,6 @@ export default async function Dokument({ params }: { params: { id: string } }) {
 
     return (
       <div className="flex min-h-[calc(100vh-90px)] bg-gradient-to-br from-slate-50 to-slate-100">
-        {/* Sidebar */}
         <aside className="w-72 bg-white border-r border-slate-200 shadow-md flex flex-col">
           <div className="px-6 py-4 border-b border-slate-200">
             <h2 className="font-semibold text-slate-800 text-lg">Dina dokument</h2>
@@ -68,7 +59,6 @@ export default async function Dokument({ params }: { params: { id: string } }) {
           </ScrollArea>
         </aside>
 
-        {/* Dokumentvisning */}
         <main className="flex-1 overflow-hidden p-8">
           <div className="bg-white rounded-3xl shadow-lg border border-slate-200 h-full overflow-hidden">
             <DisplayDocument

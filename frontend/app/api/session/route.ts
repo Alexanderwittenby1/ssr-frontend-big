@@ -6,14 +6,8 @@ export async function GET(req: NextRequest) {
   const crf_cookie = kaka.get("__Host-csrf_access_token");
   
 
-  console.log("CRF Cookie:", crf_cookie);
-  console.log("Kaka:", kaka);
-
-  const cookie = req.headers.get("cookie") || "";
-  
-  
+  console.log("Alla cookies i session route:", kaka);
   const envMode = process.env.NODE_ENV;
-  
   const isProd = envMode === "production";
 
   const backend_url = isProd

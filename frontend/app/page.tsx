@@ -1,49 +1,23 @@
-import { Button } from "@/components/ui/button";
-import { cookies } from "next/headers";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth-options";
+import LoginButton from "@/components/LoginButton";
+import { Button } from "@/components/ui/button";
 
 export default async function Home() {
-  const cookieStore = await cookies();
-  const token = await cookieStore.get("__Host-authjs.session-token")?.value;
-  
-  
-  const envMode = process.env.NODE_ENV;
-  
-  
-  console.log("ENV är: ", envMode)
-  const isProd = envMode === "production";
-
-  const backendUrl = isProd
-  ? process.env.NEXT_PUBLIC_BACKEND_URL_PROD
-  : process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL;
-
-  const loginUrl = `${backendUrl}/auth/signin`;
-  console.log(loginUrl)
-
-
-  const res = await fetch(`${backendUrl}/auth/session`, {
-    headers: {
-      Cookie: `authjs.session-token=${token}`,
-    },
-    cache: "no-store",
-    credentials: "include"
-  });
-
-  console.log("res", res)
-
-  const session = await res.json();
-  console.log("Session: ", session)
-
+  const session = await getServerSession(authOptions);
+  console.log("Session på startsidan:", session);
+  const user = session?.user;
+  console.log("Användare på startsidan:", user);
   return (
     <main className="flex flex-col items-center justify-center min-h-[calc(100vh-90px)] bg-[url(/back.jpg)] bg-cover text-slate-800 p-8">
-      {session?.user ? (
-        
+      {user ? (
         <section
           id="dashboard"
           className="w-full max-w-5xl bg-white rounded-3xl shadow-lg border border-slate-200 p-10 text-center"
         >
           <h1 className="text-3xl font-semibold mb-4">
-            Välkommen tillbaka, {session.user.name || "Användare"} 
+            Välkommen tillbaka, {user.name || "Användare"}
           </h1>
           <p className="text-slate-500 mb-10">
             Härifrån kan du snabbt komma åt dina dokument eller skapa nya.
@@ -62,12 +36,14 @@ export default async function Home() {
 
             <Link
               href="/dokument"
-              className="group flex flex-col justify-center items-center border-2 border-dashed border-slate-300 hover:border-blue-400 h-40 rounded-2xl text-blue-700  hover:scale-105 hover:shadow-lg transition-all"
+              className="group flex flex-col justify-center items-center border-2 border-dashed border-slate-300 hover:border-blue-400 h-40 rounded-2xl text-blue-700 hover:scale-105 hover:shadow-lg transition-all"
             >
-              <h3 className="font-semibold text-lg text-blue-700" >
+              <h3 className="font-semibold text-lg text-blue-700">
                 Skapa nytt
               </h3>
-              <p className="text-sm text-blue-700 mt-1">Starta ett nytt dokument</p>
+              <p className="text-sm text-blue-700 mt-1">
+                Starta ett nytt dokument
+              </p>
             </Link>
 
             <Link
@@ -77,12 +53,13 @@ export default async function Home() {
               <h3 className="font-semibold text-lg group-hover:text-emerald-200">
                 Profil
               </h3>
-              <p className="text-sm text-emerald-100 mt-1">Hantera konto (Ej tillgängligt)</p>
+              <p className="text-sm text-emerald-100 mt-1">
+                Hantera konto (Ej tillgängligt)
+              </p>
             </Link>
           </div>
         </section>
       ) : (
-     
         <section
           id="hero"
           className="flex flex-col items-center text-center max-w-3xl"
@@ -90,17 +67,13 @@ export default async function Home() {
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
             SSR-EDITOR
           </h1>
-          <p className="text-lg text-slate-600 mb-8 leading-relaxed ">
-            Skapa, redigera och hantera dina dokument direkt i webbläsaren.  
+          <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+            Skapa, redigera och hantera dina dokument direkt i webbläsaren.
             Snabbt, säkert och utan onödigt krångel.
           </p>
 
           <div className="flex gap-4">
-            <a href={loginUrl}>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl shadow-md hover:scale-105 transition hover:cursor-pointer">
-                Logga in
-              </Button>
-            </a>
+            <LoginButton />
             <Link href="/signup">
               <Button className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-6 py-3 rounded-xl shadow-md hover:scale-105 transition hover:cursor-pointer">
                 Skapa konto
@@ -109,28 +82,15 @@ export default async function Home() {
           </div>
 
           <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 text-slate-600">
-            <Feature
-              icon="📝"
-              title="Redigera i realtid"
-              desc="Skriv och formatera text med vår kraftfulla editor."
-            />
-            <Feature
-              icon="☁️"
-              title="Säker lagring"
-              desc="Allt sparas tryggt i molnet, alltid tillgängligt."
-            />
-            <Feature
-              icon="🚀"
-              title="Snabbt & enkelt"
-              desc="Inget krångel, bara fokusera på ditt innehåll."
-            />
+            <Feature icon="📝" title="Redigera i realtid" desc="Skriv och formatera text med vår kraftfulla editor." />
+            <Feature icon="☁️" title="Säker lagring" desc="Allt sparas tryggt i molnet, alltid tillgängligt." />
+            <Feature icon="🚀" title="Snabbt & enkelt" desc="Inget krångel, bara fokusera på ditt innehåll." />
           </div>
         </section>
       )}
     </main>
   );
 }
-
 
 function Feature({ icon, title, desc }: { icon: string; title: string; desc: string }) {
   return (

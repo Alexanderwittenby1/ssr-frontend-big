@@ -24,14 +24,13 @@ export const useNewDocument = (onDocumentCreated?: () => void) => {
     return newMode;
   });
 
-
-  
-
   const handleAddComment = (comment: Comment) => {
     setComments(prev => [...prev, comment]);
   };
 
   const handleSubmit = async () => {
+    console.log("Skapar nytt dokument...");
+    console.log({ title, content, type });
     setLoading(true);
     setError(null);
 
@@ -41,6 +40,7 @@ export const useNewDocument = (onDocumentCreated?: () => void) => {
       }
 
       const createdDoc = await DocumentService.createDocument(title, content, type);
+      console.log("------------------", createdDoc);
       setDocumentId(createdDoc.id);
       setTitle('');
       setContent('');
