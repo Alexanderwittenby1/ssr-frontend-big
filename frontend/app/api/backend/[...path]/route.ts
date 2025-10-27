@@ -41,19 +41,21 @@ export async function handler(req: NextRequest) {
   const path = url.pathname.replace("/api/backend", "");
   const targetUrl = BE + path + url.search;
 
-  // ✅ SPECIAL-FALL: AUTH ska inte ha JSON-body
-  if (path.startsWith("/auth")) {
+
+  if (path.startsWith("/auth/login") || path.startsWith("/auth/register")) {
     console.log("🔁 AUTH passthrough →", targetUrl);
 
     const res = await fetch(targetUrl, {
       method: req.method,
       headers,
+      body: req.method !== "GET" ? await req.text() : undefined,
     });
 
     const data = await res.text();
     console.log("⬅️ Backend auth status:", res.status);
     return new NextResponse(data, { status: res.status });
   }
+
 
   // ✅ GraphQL/Dokument requests fortsätter som JSON
   headers.set("content-type", "application/json");

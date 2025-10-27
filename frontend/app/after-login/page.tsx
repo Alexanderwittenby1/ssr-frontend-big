@@ -4,6 +4,12 @@ import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
+declare module "next-auth" {
+  interface Session {
+    jwt?: string;
+  }
+}
+
 function AfterLoginInner() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -11,20 +17,15 @@ function AfterLoginInner() {
   const callbackUrl = params.get("callbackUrl") || "/";
 
   useEffect(() => {
-    if (!(session as any).jwt) return; // Vänta tills JWT finns
+    if (!session?.jwt) return;
 
     async function linkUser() {
       const res = await fetch(`/api/backend/auth/oauth-link`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${(session as any).jwt}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.jwt}`,
         },
       });
-
-      if (!res.ok) {
-        console.error("Auth link error:", await res.text());
-      }
 
       router.push(callbackUrl);
     }
@@ -39,9 +40,9 @@ function AfterLoginInner() {
   );
 }
 
-export default function AfterLogin() {
+export default function AfterLoginClient() {
   return (
-    <Suspense fallback={<p className="h-screen flex justify-center items-center">Laddar...</p>}>
+    <Suspense fallback={<p>Laddar...</p>}>
       <AfterLoginInner />
     </Suspense>
   );
