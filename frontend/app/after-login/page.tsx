@@ -11,13 +11,13 @@ function AfterLoginInner() {
   const callbackUrl = params.get("callbackUrl") || "/";
 
   useEffect(() => {
-    if (!session?.jwt) return; // Vänta tills JWT finns
+    if (!(session as any).jwt) return; // Vänta tills JWT finns
 
     async function linkUser() {
       const res = await fetch(`/api/backend/auth/oauth-link`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${session.jwt}`,
+          Authorization: `Bearer ${(session as any).jwt}`,
           "Content-Type": "application/json",
         },
       });
