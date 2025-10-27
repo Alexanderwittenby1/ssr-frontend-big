@@ -3,9 +3,13 @@ import { cookies } from "next/headers";
 export async function graphqlServer(query: string, variables?: any) {
   const cookieHeader = cookies().toString();
 
-  const url = "/api/backend/graphql";
+  // ✅ Hardcode för produktion
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://ssr-frontend-big.vercel.app"
+      : "http://localhost:3000";
 
-  const res = await fetch(url, {
+  const res = await fetch(`${baseUrl}/api/backend/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
