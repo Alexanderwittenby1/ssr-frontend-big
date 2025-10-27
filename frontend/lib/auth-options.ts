@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
       if (account && profile) {
         token.name = profile?.name ?? (profile as any).login ?? null;
         token.picture = (profile as any)?.avatar_url ?? null;
-        token.sub = profile?.id?.toString() ?? null;
+        token.sub = (profile as any).id?.toString() ?? null;
 
         let email = profile?.email ?? null;
         if (!email && account.provider === "github") {
@@ -50,13 +50,12 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
-        // ✅ email fallback om privat GitHub email
+        
         token.email =
           email ??
           `${(profile as any)?.login}@users.noreply.github.com`;
       }
 
-      // ✅ GENERATE A SIGNED JWT STRING FOR BACKEND
       token.signedJwt = await new SignJWT({
         sub: token.sub,
         name: token.name,
@@ -72,13 +71,16 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      session.user.name = token.name;
-      session.user.email = token.email;
-      session.user.image = token.picture;
-      session.user.id = token.sub;
-      (session as any).jwt = token.signedJwt;
+      if (!session.user) session.user = {} as any;
+
+      (session.user as any).name = token?.name ?? null;
+      (session.user as any).email = token?.email ?? null;
+      (session.user as any).image = token?.picture ?? null;
+      (session.user as any).id = token?.sub ?? null;
+
+      (session as any).jwt = token?.signedJwt ?? null;
 
       return session;
-    },
+    }
   },
 };
