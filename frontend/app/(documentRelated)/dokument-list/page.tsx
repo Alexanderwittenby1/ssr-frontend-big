@@ -28,7 +28,7 @@ export default async function DokumentList() {
 
   const origin = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
-  const res = await fetch(`${origin}/api/backend/graphql`, {
+  const res = await fetch(`/api/backend/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
