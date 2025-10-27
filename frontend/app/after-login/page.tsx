@@ -1,24 +1,26 @@
 "use client";
 
-import { useEffect, Suspense, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 function AfterLoginInner() {
   const router = useRouter();
-  const { data: session } = useSession();
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl") || "/";
-  const [processing, setProcessing] = useState(false);
+  const { data: session, status } = useSession();
+  const [linked, setLinked] = useState(false);
 
   useEffect(() => {
-    if (!session?.jwt || processing) return;
+    if (status !== "authenticated") return;
+    if (!session?.jwt) return;
+    if (linked) return;
 
-    setProcessing(true);
+    setLinked(true);
 
     async function linkUser() {
-      console.log("🔄 Linking user...");
-      
+      console.log("🔄 Linking user to backend...");
+
       const res = await fetch("/api/backend/auth/oauth-link", {
         method: "POST",
         headers: {
@@ -33,7 +35,7 @@ function AfterLoginInner() {
     }
 
     linkUser();
-  }, [session, processing, callbackUrl, router]);
+  }, [status, session, linked, callbackUrl, router]);
 
   return (
     <p className="flex justify-center items-center h-screen">
@@ -44,7 +46,7 @@ function AfterLoginInner() {
 
 export default function Page() {
   return (
-    <Suspense fallback={<p>Laddar...</p>}>
+    <Suspense fallback={<p className="h-screen flex justify-center items-center">Laddar...</p>}>
       <AfterLoginInner />
     </Suspense>
   );
