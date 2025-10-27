@@ -10,7 +10,7 @@ export default async function Dokument({ params }: { params: { id: string } }) {
   const origin = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
   try {
-    const res = await fetch(`/api/backend/graphql`, {
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/backend/graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
