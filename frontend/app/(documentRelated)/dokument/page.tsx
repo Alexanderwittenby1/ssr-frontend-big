@@ -16,6 +16,8 @@ export default async function DokumentPage() {
     );
   }
 
+  const jwt = (session as any).jwt; // ✅ backend jwt
+
   const query = `
     query {
       documents {
@@ -32,9 +34,19 @@ export default async function DokumentPage() {
     }
   `;
 
-  // ✅ Replace fetch with graphqlServer
-  const data = await graphqlServer(query);
-  const posts = data?.documents || [];
+  // ✅ Send Authorization header manually
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL}/graphql`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`, // ✅ THE FIX
+    },
+    body: JSON.stringify({ query }),
+    cache: "no-store",
+  });
+
+  const json = await res.json();
+  const posts = json?.data?.documents || [];
 
   return (
     <div className="flex flex-1 min-h-0">
