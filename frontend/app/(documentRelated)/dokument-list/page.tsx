@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import Link from "next/link";
-import { graphqlServer } from "@/lib/graphql-server"; // ✅ IMPORT
+import { graphqlServer } from "@/lib/graphql-server"; 
 
 interface Document {
   id: string;
@@ -10,6 +10,7 @@ interface Document {
 
 export default async function DokumentList() {
   const session = await getServerSession(authOptions);
+  console.log("🔐 Session in DokumentList:", session);
 
   if (!session?.user) {
     return (

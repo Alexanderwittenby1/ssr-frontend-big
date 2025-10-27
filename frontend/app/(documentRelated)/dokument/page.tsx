@@ -5,8 +5,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import NewDocument from "@/components/new-document";
 
 export default async function DokumentPage() {
-  // ✅ SSR-skydd: kräver inloggning
+  
   const session = await getServerSession(authOptions);
+  console.log("🔐 Session in DokumentPage:", session);
 
   if (!session?.user) {
     return (
@@ -16,13 +17,13 @@ export default async function DokumentPage() {
     );
   }
 
-  // ✅ Backend-URL beroende på miljö (samma logik som proxyn)
+  
   const backendUrl =
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_BACKEND_URL_PROD!
       : process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL!;
 
-  // ✅ Backend-JWT signerad i NextAuth callbacks
+ 
   const jwt = (session as any).jwt as string | null;
 
   const query = `
