@@ -24,8 +24,11 @@ function AfterLoginInner() {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session?.jwt}`,
+          "Content-Type": "application/json",
         },
       });
+
+      console.log("OAuth link status:", res.status);
 
       router.push(callbackUrl);
     }
