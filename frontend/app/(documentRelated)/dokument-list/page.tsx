@@ -28,7 +28,7 @@ export default async function DokumentList() {
     }
   `;
 
-  // ✅ Replace fetch with graphqlServer
+ 
   const data = await graphqlServer(query);
   const documents: Document[] = data?.documents ?? [];
 
