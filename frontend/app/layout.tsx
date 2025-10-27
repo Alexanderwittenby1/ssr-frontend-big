@@ -1,18 +1,17 @@
-
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import NavbarServer from "@/components/NavbarServer";
+import Providers from "./providers"; 
 
-
-
-
-export default async function RootLayout({children,}: {children: React.ReactNode;}) {
-
-  
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="sv">
-      <body >
-     
+      <body>
+        <Providers> {/* ✅ Wrap hela UI i SessionProvider */}
           <div className="flex flex-col">
             <div className="flex flex-1">
               <main className="flex-1 overflow-auto">
@@ -22,7 +21,7 @@ export default async function RootLayout({children,}: {children: React.ReactNode
               </main>
             </div>
           </div>
-       
+        </Providers>
       </body>
     </html>
   );
