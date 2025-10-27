@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { SignJWT } from "jose";
 
-export const runtime = "nodejs"; 
-export const dynamic = "force-dynamic"; 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const BE =
   process.env.NODE_ENV === "production"
@@ -17,6 +17,19 @@ export async function handler(req: NextRequest) {
   });
 
   console.log("🔐 Proxy → user payload:", payload?.email ?? "NO USER");
+
+  const url = new URL(req.url);
+  const path = url.pathname.replace("/api/backend", "");
+  const targetUrl = BE + path + url.search;
+
+  // ✅ Läs body EN gång
+  const contentType = req.headers.get("content-type");
+  const body =
+    req.method !== "GET" &&
+    contentType &&
+    contentType.includes("application/json")
+      ? await req.text()
+      : undefined;
 
   const headers = new Headers();
 
@@ -37,18 +50,14 @@ export async function handler(req: NextRequest) {
     headers.set("Authorization", `Bearer ${backendJWT}`);
   }
 
-  const url = new URL(req.url);
-  const path = url.pathname.replace("/api/backend", "");
-  const targetUrl = BE + path + url.search;
-
-
-  if (path.startsWith("/auth/login") || path.startsWith("/auth/register")) {
+  // ✅ AUTH passthrough (ej GraphQL)
+  if (path.startsWith("/auth/login") || path.startsWith("/auth/oauth-link")) {
     console.log("🔁 AUTH passthrough →", targetUrl);
 
     const res = await fetch(targetUrl, {
       method: req.method,
       headers,
-      body: req.method !== "GET" ? await req.text() : undefined,
+      body,
     });
 
     const data = await res.text();
@@ -56,16 +65,15 @@ export async function handler(req: NextRequest) {
     return new NextResponse(data, { status: res.status });
   }
 
-
-  // ✅ GraphQL/Dokument requests fortsätter som JSON
+  // ✅ GraphQL / dokument → JSON
   headers.set("content-type", "application/json");
 
   console.log("➡️ Proxying request to:", targetUrl);
 
   const res = await fetch(targetUrl, {
     method: req.method,
-    body: req.method !== "GET" ? await req.text() : undefined,
     headers,
+    body,
   });
 
   const data = await res.text();
