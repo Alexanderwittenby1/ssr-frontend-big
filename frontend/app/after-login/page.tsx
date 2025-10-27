@@ -10,9 +10,8 @@ function AfterLoginInner() {
 
   useEffect(() => {
     async function linkUser() {
-      const origin = process.env.NEXTAUTH_URL || "http://localhost:3000";
-
-      const res = await fetch(`/api/backend/auth/oauth-link`, { method: "POST" });
+      const res = await fetch(`/api/backend/auth/oauth-link`, { method: "POST" ,
+      credentials: "include",});
 
       if (!res.ok) {
         console.error("Auth link error:", await res.text());
