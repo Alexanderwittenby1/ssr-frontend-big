@@ -10,7 +10,7 @@ console.log(
 );
 
 export const authOptions: NextAuthOptions = {
-  trustHost: true,
+ 
   providers: [
     GitHub({
       clientId: process.env.GITHUB_ID!,
