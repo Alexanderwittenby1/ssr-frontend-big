@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import GitHub from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { SignJWT } from "jose";
 
 console.log(
@@ -18,6 +19,55 @@ export const authOptions: NextAuthOptions = {
       authorization: { params: { scope: "read:user user:email" } },
     }),
     
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        try {
+          // ✅ Anropa backend för att verifiera email/lösenord
+          const baseUrl = process.env.NODE_ENV === "production"
+            ? process.env.NEXT_PUBLIC_BACKEND_URL_PROD!
+            : process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL!;
+
+          const res = await fetch(`${baseUrl}/auth/signin/credentials`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          });
+
+          if (!res.ok) {
+            console.error("Credentials login failed:", res.status);
+            return null;
+          }
+
+          const user = await res.json();
+          
+          if (user && user.email) {
+            return {
+              id: user._id,
+              name: user.username,
+              email: user.email,
+              image: user.avatar,
+            };
+          }
+          
+          return null;
+        } catch (error) {
+          console.error("Credentials auth error:", error);
+          return null;
+        }
+      },
+    }),
   ],
 
   secret: process.env.AUTH_SECRET,

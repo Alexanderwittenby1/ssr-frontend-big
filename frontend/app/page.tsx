@@ -74,7 +74,7 @@ export default async function Home() {
 
           <div className="flex gap-4">
             <LoginButton />
-            <Link href="/signup">
+            <Link href="/auth/register">
               <Button className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-6 py-3 rounded-xl shadow-md hover:scale-105 transition hover:cursor-pointer">
                 Skapa konto
               </Button>

@@ -39,12 +39,12 @@ export default function Navbar({ user }: { user: any }) {
             </button>
           </>
         ) : (
-          <button
-            onClick={() => signIn("github", { callbackUrl: "/after-login" })}
+          <Link
+            href="/auth/signin"
             className="bg-slate-950 text-white px-4 py-1 rounded-full hover:bg-slate-800 transition font-bold"
           >
             Logga in
-          </button>
+          </Link>
         )}
       </div>
     </div>
