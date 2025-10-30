@@ -55,7 +55,7 @@ export const createDocument = async (
     content,
     type,
   });
-  console.log("Create document response data:", data);
+  
   const doc = data.createDocument;
 
   const id = doc.id ?? doc._id;

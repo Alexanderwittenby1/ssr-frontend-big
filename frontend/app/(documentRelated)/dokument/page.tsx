@@ -50,7 +50,7 @@ export default async function DokumentPage() {
   }> = [];
 
   try {
-    // ✅ Skicka Authorization: Bearer <jwt> till backend GraphQL
+    
     const res = await fetch(`${backendUrl}/graphql`, {
       method: "POST",
       headers: {
@@ -58,7 +58,7 @@ export default async function DokumentPage() {
         ...(jwt ? { Authorization: `Bearer ${jwt}` } : {}),
       },
       body: JSON.stringify({ query }),
-      // Viktigt i SSR/Server Components så vi inte cache:ar authade svar
+     
       cache: "no-store",
     });
 

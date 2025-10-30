@@ -37,15 +37,15 @@ export default function SignInPage() {
   };
 
   const handleGitHubLogin = () => {
-    signIn('github', { callbackUrl: '/dokument' });
+    signIn('github', { callbackUrl: '/' });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className=" flex items-center justify-center bg-[url(/back.jpg)] bg-cover min-h-[calc(100vh-90px)]">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Logga in på ditt konto
           </h2>
         </div>
         
@@ -63,7 +63,7 @@ export default function SignInPage() {
                 autoComplete="email"
                 required
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Epost address"
+                placeholder="example@example.se"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -103,11 +103,9 @@ export default function SignInPage() {
 
           {/* Divider */}
           <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
-            </div>
+        
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-50 text-gray-500">Eller fortsätt med</span>
+              <span className="px-2  text-indigo-600 ">Eller fortsätt med</span>
             </div>
           </div>
 

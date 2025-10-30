@@ -40,7 +40,7 @@ export const useNewDocument = (onDocumentCreated?: () => void) => {
       }
 
       const createdDoc = await DocumentService.createDocument(title, content, type);
-      console.log("------------------", createdDoc);
+      
       setDocumentId(createdDoc.id);
       setTitle('');
       setContent('');
@@ -74,7 +74,7 @@ export const useNewDocument = (onDocumentCreated?: () => void) => {
 
 
   const runCode = useCallback(async () => {
-    console.log("Kör kod...");
+    
     if(!isCodeMode) return;
 
     if(!content.trim()) {
@@ -84,12 +84,9 @@ export const useNewDocument = (onDocumentCreated?: () => void) => {
 
     try {
       const content_to_base64 = btoa(content);
-      console.log("Innehåll i base64:", content_to_base64);
       const result = await DocumentService.runCode(content_to_base64);
-      
-      console.log("Kodkörning resultat:", result);
       const new_res = atob(result.data);
-      console.log("Dekodad resultat:", new_res);
+      
       setRunOutput(new_res);
     } catch (err: any) {
       console.error(err);

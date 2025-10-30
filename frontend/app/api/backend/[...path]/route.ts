@@ -5,8 +5,7 @@ import { SignJWT } from "jose";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const BE =
-  process.env.NODE_ENV === "production"
+const BE = process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_BACKEND_URL_PROD!
     : process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL!;
 
@@ -16,7 +15,7 @@ export async function handler(req: NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
 
-  console.log("🔐 Proxy → user payload:", payload?.email ?? "NO USER");
+  console.log("Proxy user payload:", payload?.email ?? "NO USER");
 
   const url = new URL(req.url);
   const path = url.pathname.replace("/api/backend", "");
@@ -32,7 +31,7 @@ export async function handler(req: NextRequest) {
 
   const headers = new Headers();
 
-  // ✅ ALWAYS send Authorization if user is logged in
+  
   if (payload) {
     const secret = new TextEncoder().encode(process.env.AUTH_SECRET!);
 
@@ -50,10 +49,10 @@ export async function handler(req: NextRequest) {
     headers.set("Authorization", `Bearer ${backendJWT}`);
   }
 
-  // ✅ Always JSON for requests to backend API
+  
   headers.set("Content-Type", "application/json");
 
-  console.log("➡️ Proxying request to:", targetUrl);
+  console.log("Proxying request to:", targetUrl);
 
   const res = await fetch(targetUrl, {
     method: req.method,
@@ -62,7 +61,7 @@ export async function handler(req: NextRequest) {
   });
 
   const data = await res.text();
-  console.log("⬅️ Backend status:", res.status);
+  console.log("Backend status:", res.status);
 
   return new NextResponse(data, { status: res.status });
 }

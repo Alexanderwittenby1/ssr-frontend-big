@@ -6,9 +6,9 @@ import Link from "next/link";
 
 export default function Navbar({ user }: { user: any }) {
   return (
-    <div className="bg-blue-600 w-full h-[90px] flex justify-between items-center px-8">
+    <div className="bg-transparent w-full h-[90px] flex justify-between items-center px-8">
       <Link className="flex flex-row items-center justify-center" href="/">
-        <Image src="/noetly.svg" width={80} height={80} alt="logga" className="pt-5" />
+        <Image src="/noetly.svg" width={80} height={80} alt="logga" className="pt-5 " />
         <p className="text-[#E4960E] font-bold text-3xl -translate-x-4 translate-y-1 font-orbitron">
           otly
         </p>

@@ -16,7 +16,7 @@ export default async function Home() {
           id="dashboard"
           className="w-full max-w-5xl bg-white rounded-3xl shadow-lg border border-slate-200 p-10 text-center"
         >
-          <h1 className="text-3xl font-semibold mb-4">
+          <h1 className="text-3xl font-semibold mb-4">  
             Välkommen tillbaka, {user.name || "Användare"}
           </h1>
           <p className="text-slate-500 mb-10">
